@@ -68,39 +68,35 @@ public class Conexion {
 	}
 
 	//METODO QUE CREA TABLAS MYSQL
-	public void createTable(String db,String name) {
+	public void createTable(String db,String q) {
 		try {
 			String Querydb = "USE "+db+";";
 			Statement stdb= conexion.createStatement();
 			stdb.executeUpdate(Querydb);
 			
-			String Query = "CREATE TABLE "+name+""
-					+ "(ID INT PRIMARY KEY AUTO_INCREMENT, Nombre VARCHAR(50),Apellido VARCHAR(50),"
-					+ "Edad VARCHAR(3), Sexo VARCHAR(1))";
+			String Query = q;
+					//+ "Edad VARCHAR(3), Sexo VARCHAR(1))";
 			Statement st= conexion.createStatement();
 			st.executeUpdate(Query);
 			System.out.println("Tabla creada con exito!");
 			
 		}catch (SQLException ex){
 			System.out.println(ex.getMessage());
-			System.out.println("Error crando tabla.");
+			System.out.println("Error creando tabla.");
 			
 		}
 		
 	}
 	
 	//METODO QUE INSERTA DATOS EN TABLAS MYSQL
-	public void insertData(String db, String table_name, String name, String lastname, String age, String gender) {
+	public void insertData(String db, String table_name, String name) {
 		try {
 			String Querydb = "USE "+db+";";
 			Statement stdb= conexion.createStatement();
 			stdb.executeUpdate(Querydb);
 						
-			String Query = "INSERT INTO " + table_name + " (Nombre, Apellido, Edad, Sexo) VALUE(" 
-					+ "\"" + name + "\", "
-					+ "\"" + lastname + "\", "
-					+ "\"" + age + "\", "
-					+ "\"" + gender + "\"); ";
+			String Query = "INSERT INTO " + table_name + " (Nombre) VALUE(" 
+					+ "\"" + name + "\"); ";
 			Statement st = conexion.createStatement();
 			st.executeUpdate(Query);
 			
@@ -112,9 +108,29 @@ public class Conexion {
 		}
 					
 	}
-	
+	public void insertData(String db, String table_name, String name, int price, int fabricante) {
+		try {
+			String Querydb = "USE "+db+";";
+			Statement stdb= conexion.createStatement();
+			stdb.executeUpdate(Querydb);
+						
+			String Query = "INSERT INTO " + table_name + " (Nombre, Precio, Fabricante) VALUE(" 
+					+ "\"" + name + "\", "
+					+ "\"" + price + "\", "
+					+ "\"" + fabricante + "\"); ";
+			Statement st = conexion.createStatement();
+			st.executeUpdate(Query);
+			
+			System.out.println("Datos almacenados correctamente");;
+			
+		} catch (SQLException ex ) {
+			System.out.println(ex.getMessage());
+			JOptionPane.showMessageDialog(null, "Error en el almacenamiento");
+		}
+					
+	}
 	//METODO QUE OBTIENE VALORES MYSQL
-	public void getValues(String db, String table_name) {
+	public void getValues(String db, String table_name, String table_name2) {
 		try {
 			String Querydb = "USE "+db+";";
 			Statement stdb= conexion.createStatement();
@@ -126,13 +142,26 @@ public class Conexion {
 			resultSet = st.executeQuery(Query);
 			
 			while (resultSet.next()) {
-				System.out.println("ID: " +  resultSet.getString("ID") + " "
-						+ "Nombre: " +  resultSet.getString("Nombre") + " "
-						+ "Apellido:" + resultSet.getString("Apellido") +  " "
-						+ "Edad: " +  resultSet.getString("Edad") + " "
-						+ "Sexo: " +  resultSet.getString("Sexo") + " "
+				System.out.println("codigo: " +  resultSet.getString("codigo") + " "
+						+ "nombre: " +  resultSet.getString("nombre") + " "
 						);
 			}
+			
+			String Query2 = "SELECT * FROM " + table_name2;
+			Statement st2 = conexion.createStatement();
+			java.sql.ResultSet resultSet2;
+			resultSet2 = st2.executeQuery(Query2);
+			
+			while (resultSet2.next()) {
+				System.out.println("codigo: " +  resultSet2.getString("codigo") + " "
+						+ "nombre: " +  resultSet2.getString("nombre") + " "
+						+ "precio:" + resultSet2.getString("precio") +  " "
+						+ "fabricante: " +  resultSet2.getString("fabricante") + " "
+						);
+			}
+			
+			
+			
 		} catch (SQLException ex) {
 			System.out.println(ex.getMessage());
 			System.out.println("Error en la adquisicion de datos");
